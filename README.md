@@ -18,7 +18,7 @@
 
    2015年1月至2018年10月的总回报考虑滑点的情况下是2.97，最大回撤44%，沪深300的总回报1.11，最大回撤47%。
 
-   ![svm_hs300](E:\GitHub\SVM-and-HS300\data\svm_hs300.png)
+   ![svm_hs300](https://github.com/Jensenberg/SVM-and-HS300/blob/master/data/svm_hs300.png)
 
 4. 可以看到策略主要是在2015年完成收益率的积累，后续表现乏力，说明在趋势阶段预测效果较好，其他阶段则不如人意。
 
