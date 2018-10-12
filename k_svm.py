@@ -19,7 +19,7 @@ class SVM():
     def __init__(self, backward, forward):
         self.bk = backward #回看前几天的数据
         self.fw = forward #预测后几天的收益
-        self.slippage = 0.001 #滑点情况，共10个基点，买入卖出各一个基点
+        self.slippage = 0.0002 #滑点情况，共2个基点，买入卖出各1个基点
         
     def data_pre(self):
         '''
@@ -131,7 +131,8 @@ class SVM():
         train_data, test_data = self.data_split(begin_year)
         x_train, y_train = train_data.iloc[:, :-1], train_data.iloc[:, -1]
         x_test, y_test = test_data.iloc[:, :-1], test_data.iloc[:, -1]
-        C, gamma, score = self.svm_fit(x_train, y_train)
+#        C, gamma, score = self.svm_fit(x_train, y_train)
+        C, gamma, score, _ = paras[begin_year]
         clf = SVC(C=C, gamma=gamma, class_weight='balanced', cache_size=4000)
         clf.fit(x_train, y_train)
         test_score = clf.score(x_test, y_test) #测试集上的准确率
@@ -151,11 +152,10 @@ class SVM():
                 date = label.index[j]
                 if label.loc[date, 'label'] == label.loc[date, 'predict']:
                     #预测正确，则获取多空收益
-                    retns[date] = abs(data.loc[date, 'retn']) * (1-self.slippage)
+                    retns[date] = abs(data.loc[date, 'retn']) - self.slippage
                 else:
                     #预测失误，产生损失
-                    pct = data.loc[date, 'retn'] * (1+self.slippage)
-                    retns[date] = pct if pct < 0 else -pct
+                    retns[date] = - abs(data.loc[date, 'retn']) - self.slippage
         return paras, 1 + pd.Series(retns).sort_index().cumsum()
         
 if __name__ == '__main__':
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     
     fig, ax1 = plt.subplots(figsize=(15, 8))
     ax1.plot(nav, label='strategy')
-    hs300 = data['close'][-939:] / data['close'][-939]
+    hs300 = data['close'][-len(nav):] / data['close'][-len(nav)]
     ax1.set_xlim(nav.index[0], nav.index[-1])
     ax1.plot(hs300, label='HS300')
     ax1.set_ylabel('Net Asset Value', fontdict={'fontsize':16})
@@ -193,6 +193,12 @@ if __name__ == '__main__':
     ax2.set_ylim(-1.5, 0)
     plt.savefig('svm_hs300.png', bbox_inches='tight')
     
-    
-    
+    for i in range(4):
+        train_data, test_data = hs.data_split(i)
+        x_train, y_train = train_data.iloc[:, :-1], train_data.iloc[:, -1]
+        x_test, y_test = test_data.iloc[:, :-1], test_data.iloc[:, -1]
+        C, gamma, *res = paras[i]
+        clf = SVC(C=C, gamma=gamma, class_weight='balanced', cache_size=4000)
+        clf.fit(x_train, y_train)
+        print('%.4f' % clf.score(x_train, y_train))
     
