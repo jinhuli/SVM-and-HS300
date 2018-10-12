@@ -11,8 +11,10 @@ from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV as GSCV
 
 class SVM():
+    '''
+    必须建立类属性data，包含开高低收、成交量的日数据
+    '''
     
-#   #必须建立类属性data，包含开高低收、成交量的日数据，
     train_years=10 #训练样本的大小，十年数据
     year_days=240 #一年有240个交易日
     
