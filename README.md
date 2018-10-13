@@ -16,11 +16,7 @@
 
    $loss =- |Close_3 - Open_1| - slippage$
 
-<<<<<<< HEAD
    2015年1月至2018年10月的总回报考虑滑点的情况下是1.69，最大回撤26%，沪深300的总回报1.11，最大回撤47%。
-=======
-   2015年1月至2018年10月期间，考虑滑点的情况下，总回报是2.97，最大回撤44%；沪深300的总回报1.11，最大回撤47%。
->>>>>>> 33b77ce3ba619caf3d407ec150bdd391a8a9ee5b
 
    ![svm_hs300](https://github.com/Jensenberg/SVM-and-HS300/blob/master/data/svm_hs300.png)
 
