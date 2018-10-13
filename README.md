@@ -4,15 +4,15 @@
 
 1. 利用沪深300的日行情数据：开高低收、交易量，构建五个特征来刻画K线的形态:
 
-   $high\\_low = \frac {high} {low} - 1$
+   $high\_low = \frac {high} {low} - 1$
 
-   $high\\_close = \frac {high}{close} - 1$
+   $high\_close = \frac {high}{close} - 1$
 
-   $close\\_low = \frac {close} {low} - 1$
+   $close\_low = \frac {close} {low} - 1$
 
-   $close\\_open = \frac {close}{open} - 1$
+   $close\_open = \frac {close}{open} - 1$
 
-   $vol\\_pct = \frac {vol_i} {vol_{i-1}} -1$
+   $vol\_pct = \frac {vol_i} {vol_{i-1}} -1$
 
    以前3天的特征数据，利用基于高斯核的支持向量机分类器，预测后3天的市场涨跌方向；
 
