@@ -53,12 +53,7 @@ class SVM():
         #将特征标准化
         for field in attr.columns:
             attr[field] = (attr[field] - attr[field].mean()) / attr[field].std()
-        plt.figure(figsize=(6, 5))
-        sns.heatmap(attr.iloc[:, :-1].corr())
-        plt.xticks(fontsize=12)
-        plt.yticks(fontsize=12)
-        plt.tight_layout()
-        plt.savefig('attr_heatmap.png')
+
         #上涨标记为1，下跌标记为-1
         attr['label'] = np.where(attr['close_open'].shift(-1) > 0, 1, -1)
         
@@ -187,9 +182,15 @@ if __name__ == '__main__':
     SVM.data = data
     hs = SVM(5, 20)
     attr = hs.data_pre()
-
-    years = int(len(data) / 240) + 1
-    paras, nav = hs.cum_retn(years - hs.train_years)
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(attr.iloc[:, :-1].corr())
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.tight_layout()
+    plt.savefig('attr_heatmap.png')
+    total_years = int(len(data) / 240) + 1
+    years = total_years -  SVM.train_years
+    paras, nav = hs.cum_retn(years)
     def drawdown(nav):
         #计算最大回撤
         dd = []
@@ -198,8 +199,12 @@ if __name__ == '__main__':
             dd.append(min(0, nav[i] - max_i) / max_i)
         return dd
     Drawdown = pd.Series(drawdown(nav), index=nav.index[1:])
-    maxdd = min(Drawdown) 
-    calmar = - (nav[-1]**(1/4) -1) / maxdd 
+    MaxDD = min(Drawdown)
+    Total_return = nav[-1]
+    Ann = Total_return ** (1/years) -1
+    Sigma = nav.std() / (years**(1/2))
+    IR = Ann / Sigma
+    Calmar = - Ann / MaxDD 
     
     fig, ax1 = plt.subplots(figsize=(15, 8))
     ax1.plot(nav, label='strategy')
@@ -208,13 +213,23 @@ if __name__ == '__main__':
     ax1.plot(hs300, label='HS300')
     ax1.set_ylabel('Net Asset Value', fontdict={'fontsize':16})
     ax1.set_xlabel('Date', fontdict={'fontsize':16})
-    ax1.legend(loc='center right', fontsize=16)
+    ax1.legend(loc='center left', fontsize=14)
     ax2 = ax1.twinx()
     ax2.set_ylim(-1.5, 0)
     ax2.plot(Drawdown, color='c')
     ax2.set_ylabel('Max Drawdown', fontdict={'fontsize':16})
     ax2.fill_between(Drawdown.index, Drawdown, color='c')
     ax2.set_ylim(-1.5, 0)
+    words = '''slippage: {:8.4f}
+    Total return: {:8.2f}
+    Annual return: {:8.2f}
+    Volatility: {:8.2f} 
+    IR: {:8.2f}
+    Max Drawdown: {:8.2f}
+    Calmar: {:8.2f}'''.format(hs.slippage, Total_return, Ann, Sigma, IR, MaxDD, Calmar)
+    ax2.text(ax2.get_xbound()[0]+1335, -0.8, words, 
+         fontsize=16, horizontalalignment='right', 
+         bbox=dict(boxstyle='square', fc='white'))
     plt.savefig('v_svm.png', bbox_inches='tight')
     
     for i in range(4):

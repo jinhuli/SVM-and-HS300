@@ -101,7 +101,7 @@
 
    总回报是2.58，最大回撤18.67%，calmar比率1.43，远好于指数的表现。
 
-![v_svm](https://github.com/Jensenberg/SVM-and-HS300/blob/master/data/v_svm.png)
+   ![v_svm](https://github.com/Jensenberg/SVM-and-HS300/blob/master/data/v_svm.png)
 
 
 
