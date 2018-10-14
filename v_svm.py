@@ -208,7 +208,7 @@ if __name__ == '__main__':
     ax1.plot(hs300, label='HS300')
     ax1.set_ylabel('Net Asset Value', fontdict={'fontsize':16})
     ax1.set_xlabel('Date', fontdict={'fontsize':16})
-    ax1.legend(loc='lower right', fontsize=14)
+    ax1.legend(loc='center right', fontsize=16)
     ax2 = ax1.twinx()
     ax2.set_ylim(-1.5, 0)
     ax2.plot(Drawdown, color='c')
