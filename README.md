@@ -4,7 +4,7 @@
 
 1. 利用沪深300的日行情数据：开高低收、交易量，构建五个特征来刻画K线的形态:
 
-   $high\backslash_low = \frac {high} {low} - 1$
+   $high_low = \frac {high} {low} - 1$
 
    $high\_close = \frac {high}{close} - 1$
 
